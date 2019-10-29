@@ -7,22 +7,35 @@ public class Stock {
         int[] prices = new int[]{3,2,6,5,0,3};
         int max = maxProfitWhenK1(prices);
         System.out.println(max);
-        int[][] tempResult = new int[3][];
-        List resultList = new ArrayList();
-        spiltAarrayWithIndex(prices,3, tempResult, resultList);
-        System.out.println(resultList);
         int[][] tempResult2 = new int[2][];
         List resultList2 = new ArrayList();
         spiltAarrayWithIndex(prices,2, tempResult2, resultList2);
+        int k = 2;
         System.out.println(resultList2);
-        for (Object o:resultList2) {
-            int[][] result = (int[][])o;
-            max = Math.max(max, maxProfitWhenK1(result[0])+maxProfitWhenK1(result[1]));
-        }
+        max = getMax(max, k, resultList2);
+        System.out.println(max);
+        int[][] tempResult = new int[3][];
+        List resultList = new ArrayList();
+        spiltAarrayWithIndex(prices,3, tempResult, resultList);
+        k = 3;
+        max = getMax(max, k, resultList);
+        System.out.println(resultList);
         System.out.println(max);
     }
 
-    //从一个数组中找到最大的
+    private static int getMax(int max, int k, List resultList) {
+        for (Object o:resultList) {
+            int[][] result = (int[][])o;
+            int thisMax = 0;
+            for(int i=0;i<k;i++){
+                thisMax += maxProfitWhenK1(result[i]);
+            }
+            max = Math.max(max, thisMax);
+        }
+        return max;
+    }
+
+    //从一个数组中找到最大的，固定算法，见leetcode
     public static int maxProfitWhenK1(int[] prices) {
         if (prices.length <= 1) {
             return 0;
@@ -36,6 +49,7 @@ public class Stock {
         return max;
     }
 
+    //处理数组分裂问题，这样就能把k>1的问题分解为若干个k=1的问题
     public static void spiltAarrayWithIndex(int[] prices, int k, int[][] tempResult, List resultList){
         if(prices.length<2*k){
             System.out.println("need Not calculate" );
