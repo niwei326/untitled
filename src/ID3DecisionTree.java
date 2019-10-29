@@ -20,6 +20,7 @@ public class ID3DecisionTree {
         int[] dSampleCount = {6,6,5};
         double gainD = gain(entD,entDsets, dSampleCount);
         System.out.println("gainD:"+ gainD);
+        //训练集合来自网页https://www.cnblogs.com/gfgwxw/p/9439482.html，可以再拿其他id3的例子测试下～～
         String[] headers = {"信用","收入","年龄","工作性质"};
         String[][] keys = {
                 {"N","L","H","S"},//1
