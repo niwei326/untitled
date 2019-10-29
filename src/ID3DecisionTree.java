@@ -20,20 +20,40 @@ public class ID3DecisionTree {
         int[] dSampleCount = {6,6,5};
         double gainD = gain(entD,entDsets, dSampleCount);
         System.out.println("gainD:"+ gainD);
-        String[] headers = {"testA","testB"};
-        String[][] keys = {{"A","TTE"},{"A","TTE"},{"A","TTF"},{"B","TTE"},{"B","TTE"},{"B","TTF"},{"B","TTE"},{"C","TTE"},{"A","TTE"},{"A","TTF"},
-                {"A","TTE"},{"B","TTZ"},{"B","TTZ"},{"C","TTE"},{"C","TTC"},{"C","TTE"},{"C","TTE"}};
-        String[] results = {"T","T","T","T","T","T","T","T","F","F","F","F","F","F","F","F","F"};
+        String[] headers = {"信用","收入","年龄","工作性质"};
+        String[][] keys = {
+                {"N","L","H","S"},//1
+                {"N","L","H","N"},//2
+                {"G","L","H","S"},//3
+                {"B","N","H","S"},//4
+                {"B","H","N","S"},//5
+                {"B","H","N","N"},//6
+                {"G","H","N","N"},//7
+                {"N","N","H","S"},//8
+                {"N","H","N","S"},//9
+                {"B","N","N","S"},//10
+                {"N","N","N","N"},//11
+                {"G","N","H","N"},//12
+                {"G","L","N","S"},//13
+                {"B","N","H","N"}//14
+        };
+        String[] results = {"F","F","T","T","T","F","T","F","T","T"
+                ,"T","T","T","F"};
         List<Data> testList =generateDataList(headers, keys,results);
         System.out.println(testList);
-        double gainMethodTest = Calculate.gain(testList, "testA", entD);
+        //double gainMethodTest = Calculate.gain(testList, "testA", entD);
         HashSet<String> sets = new HashSet<>();
-        sets.add("testA");
-        sets.add("testB");
+        sets.add("信用");
+        sets.add("收入");
+        sets.add("年龄");
+        sets.add("工作性质");
         Map resultMap = Calculate.gain(testList,sets);
-        System.out.println(gainMethodTest);
+        //System.out.println(gainMethodTest);
         System.out.println(resultMap);
         System.out.println(Calculate.getBestGainAttr(resultMap));
+        //测试buildTree
+        TreeNode treenode = buildTree(testList,sets);
+        System.out.println(treenode);
     }
 
     public static List<Data>  generateDataList(String[] headers, String[][] keys,String[] results){
@@ -66,6 +86,7 @@ public class ID3DecisionTree {
         System.out.println("结果类型个数"+resultSet.size());
         if (resultSet.size() == 1 || propertySet.size() == 1) {
             node.setPropertyName(maxResult);
+            System.out.println("生成节点特征结果：" + maxResult);// #
             return node;
         }
         Map gainResultMap = Calculate.gain(dataList, propertySet);
@@ -92,10 +113,12 @@ public class ID3DecisionTree {
                 leafNode.setDatas(di);
                 leafNode.setCandAttr(newPropertySet);
                 node.getChildNodeMap().put(propValue, leafNode);
+                System.out.println("生成节点特征"+propValue+",结果：" + maxResult);// #
             } else {
                 //递归加入子节点
                 TreeNode newNode = buildTree(di, newPropertySet);
                 node.getChildNodeMap().put(propValue, newNode);
+                System.out.println("剩余分类特征递归" + newPropertySet);// #
             }
         }
         return node;
