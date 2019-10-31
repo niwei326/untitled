@@ -36,7 +36,7 @@ public class FindList3 {
             //当第一个条子就已经比算数平均值大，那么这跟条子就能扔了，重新计算平均值
             if(firstBar > sumTarget){
                 valueList.remove(0);
-                break;
+                continue;
             }
             selectIndex1.add(firstBar);
             selectSum1 += firstBar;
@@ -115,6 +115,8 @@ public class FindList3 {
 
             }
         }
+        System.out.println("结果："+sumTarget);
+
     }
 
     //算出现有钢条算术平均值
